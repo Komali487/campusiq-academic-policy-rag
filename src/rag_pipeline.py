@@ -1,108 +1,126 @@
-"""
+ """
 CampusIQ - RAG Pipeline
 
-Connects query understanding, document retrieval,
-and answer generation into one pipeline.
+Connects query understanding, semantic retrieval,
+and grounded answer generation.
 """
 
 from typing import List, Dict
 
 from query_understanding import analyze_query
-from retrieval import retrieve_documents, format_retrieved_context
+from vector_store import PolicyVectorStore
 
 
-def build_prompt(query: str, context: str) -> str:
-    """
-    Build a grounded prompt using retrieved policy information.
-    """
+class CampusIQRAG:
+    """Main RAG system for CampusIQ."""
 
-    return f"""
+    def __init__(self):
+        self.vector_store = PolicyVectorStore()
+
+    def load_documents(
+        self,
+        documents: List[Dict]
+    ) -> None:
+        """Load policy documents into the semantic search index."""
+
+        self.vector_store.add_documents(documents)
+
+    def retrieve(
+        self,
+        query: str,
+        top_k: int = 5
+    ) -> List[Dict]:
+        """Retrieve the most relevant policy chunks."""
+
+        query_info = analyze_query(query)
+
+        return self.vector_store.search(
+            query_info["cleaned_query"],
+            top_k=top_k
+        )
+
+    def build_context(
+        self,
+        documents: List[Dict]
+    ) -> str:
+        """Build context from retrieved policy chunks."""
+
+        if not documents:
+            return "No relevant policy information was found."
+
+        context_parts = []
+
+        for document in documents:
+            source = document.get(
+                "source",
+                "Unknown source"
+            )
+
+            text = document.get("text", "")
+
+            context_parts.append(
+                f"Source: {source}\n{text}"
+            )
+
+        return "\n\n---\n\n".join(context_parts)
+
+    def create_prompt(
+        self,
+        query: str,
+        context: str
+    ) -> str:
+        """Create a grounded prompt for the answer generator."""
+
+        return f"""
 You are CampusIQ, an academic policy assistant.
 
-Answer the student's question using ONLY the policy
-information provided in the context below.
+Answer the student's question using ONLY the
+provided academic policy context.
 
-If the answer cannot be found in the context,
-clearly say that the information is not available
-in the provided academic policy documents.
+Do not invent policies, dates, fees, percentages,
+deadlines, or other information.
 
-Do not invent rules, percentages, dates, fees,
-or other policy information.
+If the answer is not available in the context,
+say that the information is not available in
+the provided policy documents.
 
 Student question:
 {query}
 
-Policy context:
+Academic policy context:
 {context}
 
 Answer:
 """.strip()
 
+    def run(
+        self,
+        query: str,
+        top_k: int = 5
+    ) -> Dict:
+        """Run the complete retrieval pipeline."""
 
-def generate_answer(
-    query: str,
-    retrieved_documents: List[Dict]
-) -> str:
-    """
-    Generate a simple grounded answer.
+        query_analysis = analyze_query(query)
 
-    This version prepares the answer from retrieved
-    policy context. An LLM can be connected later.
-    """
-
-    if not retrieved_documents:
-        return (
-            "I could not find relevant information in "
-            "the available academic policy documents."
+        documents = self.vector_store.search(
+            query_analysis["cleaned_query"],
+            top_k=top_k
         )
 
-    relevant_documents = [
-        document
-        for document in retrieved_documents
-        if document.get("score", 0) > 0
-    ]
+        context = self.build_context(documents)
 
-    if not relevant_documents:
-        return (
-            "I could not find a sufficiently relevant "
-            "policy section to answer this question."
+        prompt = self.create_prompt(
+            query,
+            context
         )
 
-    context = format_retrieved_context(relevant_documents)
-
-    prompt = build_prompt(query, context)
-
-    return prompt
-
-
-def run_rag_pipeline(
-    query: str,
-    documents: List[Dict],
-    top_k: int = 5
-) -> Dict:
-    """
-    Run the complete CampusIQ RAG pipeline.
-    """
-
-    query_info = analyze_query(query)
-
-    retrieved_documents = retrieve_documents(
-        query_info["cleaned_query"],
-        documents,
-        top_k=top_k
-    )
-
-    answer = generate_answer(
-        query,
-        retrieved_documents
-    )
-
-    return {
-        "query": query,
-        "query_analysis": query_info,
-        "retrieved_documents": retrieved_documents,
-        "answer": answer,
-    }
+        return {
+            "query": query,
+            "query_analysis": query_analysis,
+            "retrieved_documents": documents,
+            "context": context,
+            "prompt": prompt,
+        }
 
 
 if __name__ == "__main__":
@@ -127,11 +145,22 @@ if __name__ == "__main__":
         },
     ]
 
-    question = "What attendance is required for exams?"
+    rag = CampusIQRAG()
 
-    result = run_rag_pipeline(
-        question,
-        sample_documents
+    rag.load_documents(sample_documents)
+
+    result = rag.run(
+        "What attendance is required for exams?"
     )
 
-    print(result["answer"])
+    print("Retrieved policy information:\n")
+
+    for document in result["retrieved_documents"]:
+        print(
+            f"Source: {document['source']}\n"
+            f"Score: {document['score']:.3f}\n"
+            f"{document['text']}\n"
+        )
+
+    print("\nGenerated prompt:\n")
+    print(result["prompt"])
