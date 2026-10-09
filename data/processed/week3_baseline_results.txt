@@ -1,0 +1,19 @@
+Week 3 Baseline Model Results
+Labels are rule-assigned demonstrations, not verified ground truth.
+Original chunks: 62
+Eligible chunks used: 61
+Train examples: 45
+Test examples: 16
+Majority baseline accuracy: 0.500
+TF-IDF Logistic Regression accuracy: 0.750
+
+                   precision    recall  f1-score   support
+
+academic_calendar       0.00      0.00      0.00         1
+       attendance       0.60      0.75      0.67         4
+     examinations       0.88      0.88      0.88         8
+  grading_credits       0.67      0.67      0.67         3
+
+         accuracy                           0.75        16
+        macro avg       0.54      0.57      0.55        16
+     weighted avg       0.71      0.75      0.73        16
