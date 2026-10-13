@@ -7,14 +7,14 @@ Eligible examples: 61
 Training examples: 45
 Test examples: 16
 Excluded categories: {'academic_calendar': 1}
-Numeric features: ['char_count', 'word_count', 'sentence_count', 'uppercase_ratio', 'digit_ratio', 'attendance_terms', 'exam_terms', 'credit_terms', 'eligibility_terms', 'fee_terms', 'semester_terms']
+Numeric features: ['exam_attendance_interaction', 'credit_eligibility_interaction', 'semester_exam_interaction', 'char_count', 'word_count', 'sentence_count', 'uppercase_ratio', 'digit_ratio', 'attendance_terms', 'exam_terms', 'credit_terms', 'eligibility_terms', 'fee_terms', 'semester_terms']
 
 Experiment comparison:
                                    model  accuracy  macro_f1  weighted_f1  best_cv_macro_f1        best_parameters
-                       Majority baseline    0.3750  0.109091     0.204545               NaN                     {}
-Word TF-IDF Logistic Regression baseline    0.8750  0.876044     0.869368               NaN                     {}
-               Tuned Logistic Regression    0.5625  0.545455     0.522727          0.658543 {'classifier__C': 0.1}
-                        Tuned Linear SVM    0.5625  0.545455     0.522727          0.746821 {'classifier__C': 0.1}
+                       Majority baseline     0.375  0.109091     0.204545               NaN                     {}
+Word TF-IDF Logistic Regression baseline     0.875  0.876044     0.869368               NaN                     {}
+               Tuned Logistic Regression     0.625  0.638788     0.610227          0.614603 {'classifier__C': 0.1}
+                        Tuned Linear SVM     0.625  0.638788     0.610227          0.595051 {'classifier__C': 0.1}
 
 Interpretation and limitations:
 - Compare test metrics on the same held-out split.

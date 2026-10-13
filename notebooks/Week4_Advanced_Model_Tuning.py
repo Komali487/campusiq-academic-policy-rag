@@ -110,7 +110,16 @@ def add_features(frame):
 
 df = add_features(df)
 
+# Interaction features
+df["exam_attendance_interaction"] = df["exam_terms"] * df["attendance_terms"]
+df["credit_eligibility_interaction"] = df["credit_terms"] * df["eligibility_terms"]
+df["semester_exam_interaction"] = df["semester_terms"] * df["exam_terms"]
+
 numeric_features = [
+    
+    "exam_attendance_interaction",
+    "credit_eligibility_interaction",
+    "semester_exam_interaction",
     "char_count",
     "word_count",
     "sentence_count",
