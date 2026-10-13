@@ -1,0 +1,5 @@
+model,accuracy,macro_f1,weighted_f1,best_cv_macro_f1,best_parameters
+Majority baseline,0.375,0.10909090909090909,0.20454545454545453,,{}
+Word TF-IDF Logistic Regression baseline,0.875,0.8760439560439559,0.8693681318681319,,{}
+Tuned Logistic Regression,0.5625,0.5454545454545455,0.5227272727272727,0.6585425685425687,{'classifier__C': 0.1}
+Tuned Linear SVM,0.5625,0.5454545454545455,0.5227272727272727,0.7468205868205867,{'classifier__C': 0.1}

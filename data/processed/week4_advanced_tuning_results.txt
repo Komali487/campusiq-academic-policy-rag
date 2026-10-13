@@ -1,0 +1,26 @@
+CampusIQ - Week 4 Advanced Model Tuning
+================================================
+Input: manually assigned categories in label review CSV
+Labels are provisional and have not been independently verified.
+
+Eligible examples: 61
+Training examples: 45
+Test examples: 16
+Excluded categories: {'academic_calendar': 1}
+Numeric features: ['char_count', 'word_count', 'sentence_count', 'uppercase_ratio', 'digit_ratio', 'attendance_terms', 'exam_terms', 'credit_terms', 'eligibility_terms', 'fee_terms', 'semester_terms']
+
+Experiment comparison:
+                                   model  accuracy  macro_f1  weighted_f1  best_cv_macro_f1        best_parameters
+                       Majority baseline    0.3750  0.109091     0.204545               NaN                     {}
+Word TF-IDF Logistic Regression baseline    0.8750  0.876044     0.869368               NaN                     {}
+               Tuned Logistic Regression    0.5625  0.545455     0.522727          0.658543 {'classifier__C': 0.1}
+                        Tuned Linear SVM    0.5625  0.545455     0.522727          0.746821 {'classifier__C': 0.1}
+
+Interpretation and limitations:
+- Compare test metrics on the same held-out split.
+- GridSearchCV uses training data only; the test set is reserved for final comparison.
+- The feature pipeline combines word TF-IDF, character TF-IDF, and scaled numeric features.
+- Only C was tuned for Logistic Regression and Linear SVM.
+- The dataset is small, so both cross-validation and test metrics may vary substantially with different samples.
+- Labels are provisional; scores do not establish reliable classification of real-world policy text.
+- Scaling is applied to numeric features. TF-IDF features are already normalized by the vectorizer by default.
