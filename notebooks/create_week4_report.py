@@ -61,26 +61,35 @@ for cell, value in zip(
 rows = [
     ("Majority baseline", "37.50%", "0.109", "0.205"),
     ("Word TF-IDF Logistic Regression", "87.50%", "0.876", "0.869"),
-    ("Tuned Logistic Regression", "56.25%", "0.545", "0.523"),
-    ("Tuned Linear SVM", "56.25%", "0.545", "0.523"),
+    ("Tuned Logistic Regression + interaction features", "62.50%", "0.639", "0.610"),
+    ("Tuned Linear SVM + interaction features", "62.50%", "0.639", "0.610"),
+
 ]
 for row in rows:
     cells = table.add_row().cells
     for cell, value in zip(cells, row):
         cell.text = value
 
+ 
 doc.add_paragraph(
-    "Best cross-validation macro F1 was 0.747 for Linear SVM (C=0.1). "
-    "Tuned Logistic Regression achieved 0.659 (C=0.1)."
+    "After adding interaction features, the best cross-validation "
+    "macro F1 was 0.615 for Logistic Regression (C=0.1) and "
+    "0.595 for Linear SVM (C=0.1)."
 )
 
+
 doc.add_heading("6. Interpretation", level=2)
+ 
 doc.add_paragraph(
-    "The word-only TF-IDF Logistic Regression baseline performed best "
-    "on this test split, achieving 87.5% accuracy. Both tuned models "
-    "achieved 56.25%, so advanced features and tuning did not improve "
-    "the held-out test result in this experiment."
+    "The word-only TF-IDF Logistic Regression baseline performed "
+    "best on this test split, achieving 87.5% accuracy and a macro "
+    "F1 of 0.876. After adding interaction features and tuning, both "
+    "advanced models achieved 62.5% accuracy and a macro F1 of 0.639. "
+    "Therefore, the added features and tuning did not improve the "
+    "held-out test result. The dataset is small, so these findings "
+    "are preliminary."
 )
+
 
 doc.add_heading("7. Limitations", level=2)
 for item in [
