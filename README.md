@@ -90,46 +90,34 @@ and uncertainty information.
 
 ## Project Status
 
-🚧 Currently under development.
+**Current status: Week 6 integration and testing completed; final validation in progress.**
 
-### Week 1
-- Strategic project proposal
-- Problem definition
-- Literature review
-- System architecture
-- Data strategy
-- ML/RAG methodology
-- Evaluation strategy
+CampusIQ is an academic prototype for context-aware academic policy question answering using Machine Learning, NLP, and Retrieval-Augmented Generation (RAG).
 
-### Upcoming
-- Policy dataset collection
-- Data preprocessing
-- Query dataset creation
-- Intent classification
-- Semantic embeddings
-- Hybrid retrieval
-- RAG pipeline
-- Streamlit application
-- Evaluation
+### Completed Work
 
-## Evaluation
+- **Week 1:** Project proposal, problem definition, architecture, and data strategy.
+- **Week 2:** Academic regulation PDF exploration and preprocessing.
+- **Week 3:** Baseline machine learning experiment.
+- **Week 4:** Model tuning and comparison experiments.
+- **Week 5:** RAG pipeline development and related integration work.
+- **Week 6:** Integrated pipeline execution, PDF processing, and integration test reporting.
 
-The system will be evaluated using:
+### Current Dataset
 
-- Accuracy
-- Precision
-- Recall
-- F1-score
-- Recall@K
-- Precision@K
-- Mean Reciprocal Rank (MRR)
-- Answer relevance
-- Groundedness
-- Citation correctness
-- Unsupported-claim rate
-- Uncertainty/refusal correctness
+- Source document: `R22B.Tech.AcademicRegulations.pdf`
+- Extracted text chunks: 62
+- Processed dataset: `data/processed/jntuh_policy_chunks.csv`
 
-## Disclaimer
+### Final Validation Checklist
 
-CampusIQ is an academic prototype and should not be treated as an
-authoritative replacement for official institutional decisions.
+- Verify integration test results and summary.
+- Confirm retrieval and answer quality using representative academic policy questions.
+- Review source citations and unsupported-answer handling.
+- Ensure setup instructions and project documentation are accurate.
+
+### Limitations
+
+CampusIQ is an academic prototype. Its answers should be verified against official academic regulations, and it should not replace decisions made by the institution.
+
+
