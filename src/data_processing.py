@@ -11,8 +11,8 @@ from typing import List, Dict
 from pypdf import PdfReader
 
 
-RAW_DATA_DIR = Path("data/raw")
-PROCESSED_DATA_DIR = Path("data/processed")
+RAW_DATA_DIR = Path(__file__).resolve().parent.parent / "data" / "raw"
+PROCESSED_DATA_DIR = Path(__file__).resolve().parent.parent / "data" / "processed"
 
 
 def extract_text_from_pdf(pdf_path: Path) -> str:
