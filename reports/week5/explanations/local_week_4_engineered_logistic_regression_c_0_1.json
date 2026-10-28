@@ -1,0 +1,7 @@
+{
+  "text": "y 2 elective subjects in any\nSemester, must be clearly indicated, which needs the specific approval and si gnature of\nthe Faculty Advisor/Mentor/HOD.\n4.6 If the student submits ambiguous choices or multiple options or erroneous entries during\non-line registration for the subject(s) / course(s) under a given/ specified course group/\ncategory as listed in the course structure, only the first mentioned subject/ course in that\ncategory will be taken into consideration.\n4\n4.7 Subject/ course options e xercised through on-line registration are final and cannot be\nchanged or inter-changed; further, alternate choices also will not be considered. However,\nif the subject/ course that has already been listed for registration by the Head of the\nDepartment in a  semester could not be offered due to any inevitable or unexpected\nreasons, then the student shall be allowed to have alternate choice either for a new subject\n(subject to offering of such a subject), or for another existing subject (subject",
+  "true_label": "general",
+  "predicted_label": "examinations",
+  "method": "Leave-one-token-out score ablation; descriptive, not causal.",
+  "top_token_effects": []
+}

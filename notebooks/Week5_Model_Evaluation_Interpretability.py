@@ -19,10 +19,10 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.inspection import permutation_importance
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import (accuracy_score, balanced_accuracy_score, classification_report,
-    confusion_matrix, ConfusionMatrixDisplay, f1_score, roc_curve, auc, label_binarize)
+    confusion_matrix, ConfusionMatrixDisplay, f1_score, roc_curve, auc)
 from sklearn.model_selection import StratifiedKFold, cross_validate, train_test_split
 from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import StandardScaler, label_binarize
 from sklearn.svm import LinearSVC
 
 warnings.filterwarnings("default")
@@ -65,8 +65,12 @@ NUM = ["char_count", "word_count", "sentence_count", "uppercase_ratio", "digit_r
 
 def models():
     baseline = Pipeline([
-        ("tfidf", TfidfVectorizer(max_features=5000, ngram_range=(1,2), sublinear_tf=True)),
-        ("classifier", LogisticRegression(max_iter=3000, class_weight="balanced", random_state=SEED))])
+        ("features", ColumnTransformer([
+            ("tfidf", TfidfVectorizer(max_features=5000, ngram_range=(1,2),
+                                      sublinear_tf=True), "text")
+        ])),
+        ("classifier", LogisticRegression(max_iter=3000, class_weight="balanced",
+                                          random_state=SEED))])
     prep = ColumnTransformer([
         ("word", TfidfVectorizer(max_features=5000, ngram_range=(1,2), sublinear_tf=True), "text"),
         ("char", TfidfVectorizer(analyzer="char_wb", ngram_range=(3,5), max_features=3000,
@@ -117,22 +121,43 @@ def plot_roc(model, X, y, classes, name):
         print("ROC skipped:", name, e); return None
 
 def local_ablation(model, text, true_label, path):
-    """Remove each token and record the change in the predicted-class score; not causal."""
-    pred = model.predict([text])[0]
-    def score(s):
+    """Remove tokens one at a time and measure score changes; not causal."""
+    def make_input(value):
+        return engineer(pd.DataFrame({"text": [value]}))[["text"] + NUM]
+
+    def score(value, predicted_label):
+        X_one = make_input(value)
         if hasattr(model, "predict_proba"):
-            probs = model.predict_proba([s])[0]
-            return float(probs[list(model.classes_).index(pred)])
-        vals = np.asarray(model.decision_function([s])).reshape(-1)
-        return float(vals[list(model.classes_).index(pred)]) if len(vals)==len(model.classes_) else float(vals.max())
-    base = score(text); tokens = re.findall(r"\\b[\\w'-]+\\b", str(text)); impacts=[]
+            probs = model.predict_proba(X_one)[0]
+            return float(probs[list(model.classes_).index(predicted_label)])
+        vals = np.asarray(model.decision_function(X_one)).reshape(-1)
+        if len(vals) == len(model.classes_):
+            return float(vals[list(model.classes_).index(predicted_label)])
+        return float(vals.max())
+
+    predicted = model.predict(make_input(text))[0]
+    base = score(text, predicted)
+    tokens = re.findall(r"\\b[\\w'-]+\\b", str(text))
+    impacts = []
+
     for i, token in enumerate(tokens):
         changed = " ".join(tokens[:i] + tokens[i+1:])
-        impacts.append({"token":token, "score_drop_when_removed":base-score(changed)})
-    impacts.sort(key=lambda x: abs(x["score_drop_when_removed"]), reverse=True)
-    path.write_text(json.dumps({"text":text, "true_label":str(true_label), "predicted_label":str(pred),
-        "method":"Leave-one-token-out score ablation; descriptive, not causal.",
-        "top_token_effects":impacts[:12]}, indent=2), encoding="utf-8")
+        impacts.append({
+            "token": token,
+            "score_drop_when_removed": base - score(changed, predicted)
+        })
+
+    impacts.sort(
+        key=lambda item: abs(item["score_drop_when_removed"]),
+        reverse=True
+    )
+    path.write_text(json.dumps({
+        "text": text,
+        "true_label": str(true_label),
+        "predicted_label": str(predicted),
+        "method": "Leave-one-token-out score ablation; descriptive, not causal.",
+        "top_token_effects": impacts[:12]
+    }, indent=2), encoding="utf-8")
 
 def main():
     if not DATA.exists():

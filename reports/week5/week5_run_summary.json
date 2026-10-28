@@ -1,0 +1,76 @@
+{
+  "dataset_examples": 61,
+  "train_examples": 45,
+  "test_examples": 16,
+  "category_counts_before_filtering": {
+    "examinations": 22,
+    "grading_credits": 13,
+    "promotion_eligibility": 11,
+    "general": 10,
+    "attendance": 5,
+    "academic_calendar": 1
+  },
+  "excluded_categories_under_3_examples": {
+    "academic_calendar": 1
+  },
+  "labels_independently_verified": false,
+  "random_state": 42,
+  "bootstrap_resamples": 1000,
+  "results": [
+    {
+      "model": "Majority-class baseline",
+      "test_accuracy": 0.375,
+      "test_balanced_accuracy": 0.2,
+      "test_macro_f1": 0.10909090909090909,
+      "test_weighted_f1": 0.20454545454545453,
+      "bootstrap_macro_f1_ci_low": 0.04444444444444444,
+      "bootstrap_macro_f1_ci_high": 0.19230769230769232,
+      "cv_macro_f1_mean": NaN,
+      "cv_macro_f1_std": NaN,
+      "roc": "Not applicable"
+    },
+    {
+      "model": "Word TF-IDF + Logistic Regression baseline",
+      "test_accuracy": 0.875,
+      "test_balanced_accuracy": 0.8666666666666666,
+      "test_macro_f1": 0.8760439560439559,
+      "test_weighted_f1": 0.8693681318681319,
+      "bootstrap_macro_f1_ci_low": 0.5618796992481203,
+      "bootstrap_macro_f1_ci_high": 1.0,
+      "cv_macro_f1_mean": 0.592034632034632,
+      "cv_macro_f1_std": 0.0362910014627133,
+      "cv_accuracy_mean": 0.6666666666666666,
+      "cv_balanced_accuracy_mean": 0.62,
+      "roc": "See ROC plot (AUC reported per class)"
+    },
+    {
+      "model": "Week 4 engineered Logistic Regression C=0.1",
+      "test_accuracy": 0.6875,
+      "test_balanced_accuracy": 0.5666666666666667,
+      "test_macro_f1": 0.5538461538461539,
+      "test_weighted_f1": 0.6634615384615385,
+      "bootstrap_macro_f1_ci_low": 0.2932619047619048,
+      "bootstrap_macro_f1_ci_high": 0.8928571428571428,
+      "cv_macro_f1_mean": 0.4642328042328043,
+      "cv_macro_f1_std": 0.2561679212221423,
+      "cv_accuracy_mean": 0.5333333333333333,
+      "cv_balanced_accuracy_mean": 0.5155555555555557,
+      "roc": "See ROC plot (AUC reported per class)"
+    },
+    {
+      "model": "Week 4 engineered Linear SVM C=0.1",
+      "test_accuracy": 0.9375,
+      "test_balanced_accuracy": 0.9333333333333332,
+      "test_macro_f1": 0.9446153846153846,
+      "test_weighted_f1": 0.9336538461538462,
+      "bootstrap_macro_f1_ci_low": 0.7333333333333334,
+      "bootstrap_macro_f1_ci_high": 1.0,
+      "cv_macro_f1_mean": 0.42956043956043954,
+      "cv_macro_f1_std": 0.2844324184078901,
+      "cv_accuracy_mean": 0.5111111111111111,
+      "cv_balanced_accuracy_mean": 0.4711111111111111,
+      "roc": "See ROC plot (AUC reported per class)"
+    }
+  ],
+  "warning": "Small dataset and provisional labels; not deployment evidence."
+}

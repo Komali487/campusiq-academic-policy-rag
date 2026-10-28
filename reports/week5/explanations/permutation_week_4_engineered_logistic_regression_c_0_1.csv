@@ -1,0 +1,13 @@
+input_column,importance_mean,importance_std
+text,0.2276849816849817,0.07799635996214346
+uppercase_ratio,0.0778251748251749,0.04956701091868509
+digit_ratio,0.00693040293040299,0.13725441675891475
+char_count,0.0,0.0
+credit_terms,0.0,0.0
+word_count,0.0,0.0
+attendance_terms,0.0,0.0
+exam_terms,0.0,0.0
+fee_terms,0.0,0.0
+eligibility_terms,0.0,0.0
+semester_terms,0.0,0.0
+sentence_count,-0.021850815850815813,0.08674264436512866

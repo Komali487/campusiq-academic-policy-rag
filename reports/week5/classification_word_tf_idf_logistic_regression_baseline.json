@@ -1,0 +1,45 @@
+{
+  "attendance": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 1.0
+  },
+  "examinations": {
+    "precision": 0.8571428571428571,
+    "recall": 1.0,
+    "f1-score": 0.9230769230769231,
+    "support": 6.0
+  },
+  "general": {
+    "precision": 0.75,
+    "recall": 1.0,
+    "f1-score": 0.8571428571428571,
+    "support": 3.0
+  },
+  "grading_credits": {
+    "precision": 1.0,
+    "recall": 0.6666666666666666,
+    "f1-score": 0.8,
+    "support": 3.0
+  },
+  "promotion_eligibility": {
+    "precision": 1.0,
+    "recall": 0.6666666666666666,
+    "f1-score": 0.8,
+    "support": 3.0
+  },
+  "accuracy": 0.875,
+  "macro avg": {
+    "precision": 0.9214285714285715,
+    "recall": 0.8666666666666666,
+    "f1-score": 0.8760439560439559,
+    "support": 16.0
+  },
+  "weighted avg": {
+    "precision": 0.8995535714285714,
+    "recall": 0.875,
+    "f1-score": 0.8693681318681319,
+    "support": 16.0
+  }
+}

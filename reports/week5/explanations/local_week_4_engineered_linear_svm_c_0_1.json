@@ -1,0 +1,7 @@
+{
+  "text": "t subject/ course.\n7.2 A student shall be deemed to have satisfied the academic requirements and earned the\ncredits allotted to  Real-time Research Project  (or) Field Based Research Project  (or)\nIndustry Oriented Mini Project (or) Internship (or) Seminar, if the student secures not\nless than 40% marks (i.e. 40 out of 100 allotted marks) in each of them. The student is\n6\ndeemed to have failed, if he (i) does not submit a report on Industry Oriented Mini\nProject/Internship, or (ii) not make a presentation of the same before the evaluation\ncommittee as per schedule, or (iii) secures less than 40% marks in Real-time Research\nProject (or) Field Based Research Project  (or) Industry Oriented Mini Project  (or)\nInternship evaluations.\nA student may reappear once for each of the above evaluations, when they are scheduled\nagain; if the student fails in such \u2018one reappearance\u2019 evaluation also, the student has to\nreappear for the same in the next subsequent semester, as and when it is scheduled",
+  "true_label": "grading_credits",
+  "predicted_label": "examinations",
+  "method": "Leave-one-token-out score ablation; descriptive, not causal.",
+  "top_token_effects": []
+}
