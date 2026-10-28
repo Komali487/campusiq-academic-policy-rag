@@ -1,0 +1,9 @@
+test,status,details
+PDF preprocessing produces chunks,PASS,62 chunks
+Required chunk fields exist,PASS,"columns=['source', 'chunk_id', 'text']"
+Query analysis returns cleaned query,PASS,"{'original_query': '  What attendance is required for exams?  ', 'cleaned_query': 'what attendance is required for exams?', 'categories': ['attendance', 'examination'], 'has_category': True}"
+Semantic retrieval returns results,PASS,5 results
+Retrieved results preserve source and text,PASS,5 results checked
+Context and grounded prompt are constructed,PASS,context_chars=5237
+Empty retrieval has safe fallback,PASS,No relevant policy information was found.
+Evaluation helper detects expected source,PASS,matching source returned 1.0

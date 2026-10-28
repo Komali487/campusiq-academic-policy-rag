@@ -1,0 +1,10 @@
+{
+  "test_count": 8,
+  "passed": 8,
+  "failed": 0,
+  "pass_rate": 1.0,
+  "dataset_chunks": 62,
+  "source_pdf_count": 1,
+  "answer_generation_model_used": false,
+  "note": "Integration smoke tests only; they do not validate generated answers or independent policy labels."
+}
