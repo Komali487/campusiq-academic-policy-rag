@@ -1,8 +1,9 @@
+
 """
 CampusIQ - Vector Store
 
-Creates semantic embeddings for academic policy chunks
-and retrieves the most relevant chunks for a user query.
+Combines semantic similarity and policy-category
+matching to improve academic policy retrieval.
 """
 
 from typing import List, Dict
@@ -10,9 +11,11 @@ from typing import List, Dict
 import numpy as np
 from sentence_transformers import SentenceTransformer
 
+from query_understanding import analyze_query, POLICY_KEYWORDS
+
 
 class PolicyVectorStore:
-    """Semantic search over academic policy document chunks."""
+    """Semantic and category-aware policy search."""
 
     def __init__(
         self,
@@ -29,6 +32,8 @@ class PolicyVectorStore:
         """Add documents and create their embeddings."""
 
         if not documents:
+            self.documents = []
+            self.embeddings = None
             return
 
         self.documents = documents
@@ -44,37 +49,74 @@ class PolicyVectorStore:
             normalize_embeddings=True
         )
 
+    def calculate_category_bonus(
+        self,
+        text: str,
+        categories: List[str]
+    ) -> float:
+        """Reward documents containing relevant policy terms."""
+
+        text = text.lower()
+        matched_terms = set()
+
+        for category in categories:
+            keywords = POLICY_KEYWORDS.get(category, [])
+
+            for keyword in keywords:
+                if keyword.lower() in text:
+                    matched_terms.add(keyword.lower())
+
+        return min(len(matched_terms) * 0.025, 0.12)
+
     def search(
         self,
         query: str,
         top_k: int = 5
     ) -> List[Dict]:
-        """Return the most semantically relevant documents."""
+        """Retrieve documents using semantic and category scores."""
 
         if not self.documents or self.embeddings is None:
             return []
 
+        query_info = analyze_query(query)
+
         query_embedding = self.model.encode(
-            [query],
+            [query_info["cleaned_query"]],
             convert_to_numpy=True,
             normalize_embeddings=True
         )[0]
 
-        scores = np.dot(
+        semantic_scores = np.dot(
             self.embeddings,
             query_embedding
         )
 
-        top_indices = np.argsort(scores)[::-1][:top_k]
-
         results = []
 
-        for index in top_indices:
-            result = self.documents[index].copy()
-            result["score"] = float(scores[index])
+        for index, document in enumerate(self.documents):
+            result = document.copy()
+
+            semantic_score = float(semantic_scores[index])
+
+            category_bonus = self.calculate_category_bonus(
+                document.get("text", ""),
+                query_info["categories"]
+            )
+
+            result["score"] = semantic_score
+            result["category_bonus"] = category_bonus
+            result["rerank_score"] = (
+                semantic_score + category_bonus
+            )
+
             results.append(result)
 
-        return results
+        results.sort(
+            key=lambda item: item["rerank_score"],
+            reverse=True
+        )
+
+        return results[:top_k]
 
 
 if __name__ == "__main__":
@@ -100,7 +142,6 @@ if __name__ == "__main__":
     ]
 
     store = PolicyVectorStore()
-
     store.add_documents(sample_documents)
 
     results = store.search(
@@ -111,6 +152,8 @@ if __name__ == "__main__":
     for result in results:
         print(
             f"\nSource: {result['source']}"
-            f"\nScore: {result['score']:.3f}"
+            f"\nSemantic score: {result['score']:.3f}"
+            f"\nCategory bonus: {result['category_bonus']:.3f}"
+            f"\nFinal ranking score: {result['rerank_score']:.3f}"
             f"\n{result['text']}"
         )

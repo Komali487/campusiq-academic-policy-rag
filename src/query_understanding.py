@@ -1,7 +1,7 @@
 """
 CampusIQ - Query Understanding
 
-This module prepares user questions for academic policy retrieval.
+Cleans student questions and detects relevant academic policy categories.
 """
 
 import re
@@ -11,18 +11,25 @@ from typing import Dict, List
 POLICY_KEYWORDS = {
     "attendance": [
         "attendance",
+        "attend",
         "absent",
         "absence",
         "shortage",
         "percentage",
+        "condonation",
+        "condone",
+        "present",
     ],
     "examination": [
         "exam",
         "examination",
-        "semester",
+        "semester end",
+        "end examination",
         "internal",
-        "marks",
         "supplementary",
+        "backlog",
+        "reappear",
+        "eligibility",
     ],
     "fees": [
         "fee",
@@ -36,6 +43,7 @@ POLICY_KEYWORDS = {
         "permission",
         "medical leave",
         "holiday",
+        "absence due to illness",
     ],
     "grading": [
         "grade",
@@ -44,12 +52,24 @@ POLICY_KEYWORDS = {
         "gpa",
         "marks",
         "credits",
+        "credit points",
+
     ],
     "academic_calendar": [
         "academic calendar",
         "semester dates",
         "start date",
         "end date",
+        "working days",
+        "academic year",
+        "holidays",
+    ],
+    "promotion": [
+        "promotion",
+        "promoted",
+        "detained",
+        "next semester",
+        "credits required",
     ],
 }
 
@@ -58,24 +78,21 @@ def clean_query(query: str) -> str:
     """Clean and normalize a user query."""
 
     query = query.strip().lower()
-
-    # Remove unnecessary punctuation.
     query = re.sub(r"[^\w\s?%-]", " ", query)
-
-    # Remove repeated spaces.
     query = re.sub(r"\s+", " ", query)
 
     return query
 
 
 def detect_policy_categories(query: str) -> List[str]:
-    """Identify likely policy categories from a user query."""
+    """Identify likely policy categories using word boundaries."""
 
     categories = []
 
     for category, keywords in POLICY_KEYWORDS.items():
         for keyword in keywords:
-            if keyword in query:
+            pattern = r"(?<!\w)" + re.escape(keyword) + r"(?!\w)"
+            if re.search(pattern, query):
                 categories.append(category)
                 break
 
@@ -83,13 +100,9 @@ def detect_policy_categories(query: str) -> List[str]:
 
 
 def analyze_query(query: str) -> Dict:
-    """
-    Analyze a user question and return structured information
-    for the retrieval system.
-    """
+    """Return normalized query and detected policy categories."""
 
     cleaned_query = clean_query(query)
-
     categories = detect_policy_categories(cleaned_query)
 
     return {
@@ -101,9 +114,13 @@ def analyze_query(query: str) -> Dict:
 
 
 if __name__ == "__main__":
-    example_query = "What is the minimum attendance required for exams?"
+    test_queries = [
+        "What is the minimum attendance required for exams?",
+        "How many marks are required to pass?",
+        "What is the fee for condonation?",
+        "Can I get promoted to the next semester?",
+    ]
 
-    result = analyze_query(example_query)
-
-    print("Query analysis:")
-    print(result)
+    for question in test_queries:
+        print(f"\nQuestion: {question}")
+        print(analyze_query(question))
