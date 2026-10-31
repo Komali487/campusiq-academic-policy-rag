@@ -14,7 +14,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 load_dotenv(PROJECT_ROOT / ".env")
 class CampusIQRAG:
     """Retrieval-augmented academic policy assistant."""
-    def __init__(self, model_name: str = "gemini-3.8-flash"):
+    def __init__(self, model_name: str =  "gemini-3.5-flash-lite"):
         api_key = os.getenv("GEMINI_API_KEY")
         self.client = (
             genai.Client(api_key=api_key)
